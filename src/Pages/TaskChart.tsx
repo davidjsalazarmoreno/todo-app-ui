@@ -120,11 +120,11 @@ const TaskChart: React.FC = () => {
   const completionRate = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0
 
   // Custom tooltip for charts
-  const CustomTooltip = ({ active, payload, legend }: any) => {
+  const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
         <div className="bg-background border border-border p-3 rounded-md shadow-md">
-          <p className="font-medium">{`${legend}`}</p>
+          {label && <p className="font-medium">{`${label}`}</p>}
           {payload.map((entry: any, index: number) => (
             <p key={index} style={{ color: entry.color || entry.fill }}>
               {`${entry.name}: ${entry.value}`}
