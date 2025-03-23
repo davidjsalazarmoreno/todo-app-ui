@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+
 import {
   getTasks,
   addTask,
@@ -16,6 +17,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Card, CardHeader, CardContent } from '@/components/ui/card'
+import { Link } from 'react-router'
 
 const TaskList: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([])
@@ -115,6 +117,9 @@ const TaskList: React.FC = () => {
           </Card>
         ))}
       </div>
+      <Link to="/chart" className="text-blue-500 underline">
+        Go to Charts
+      </Link>
     </div>
   )
 }

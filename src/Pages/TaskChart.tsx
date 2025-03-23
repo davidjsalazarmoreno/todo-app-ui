@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getTasks } from "../Services/taskService";
 import { Task, TaskStatus } from "../Models/Task";
 import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
+import { Link } from "react-router";
 
 const TaskChart: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -44,6 +45,9 @@ const TaskChart: React.FC = () => {
         <Tooltip />
         <Legend />
       </PieChart>
+      <Link to="/tasks" className="text-blue-500 underline">
+        Go to Tasks
+      </Link>
     </div>
   );
 };
