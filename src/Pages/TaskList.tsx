@@ -11,8 +11,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
-import { CheckCircle2, Clock, Loader2, Plus, RefreshCw, Trash2, ClipboardList, ArrowRight } from "lucide-react"
-import { Link } from "react-router"
+import { CheckCircle2, Clock, Loader2, Plus, RefreshCw, Trash2, ClipboardList, ArrowRight, LogOut } from "lucide-react"
+import { Link, useNavigate } from "react-router"
 
 const TaskList: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([])
@@ -23,6 +23,7 @@ const TaskList: React.FC = () => {
   })
   const [loading, setLoading] = useState(false)
   const [actionLoading, setActionLoading] = useState<string | null>(null)
+  const navigate = useNavigate() // Initialize useNavigate
 
   useEffect(() => {
     fetchTasks()
@@ -102,25 +103,40 @@ const TaskList: React.FC = () => {
           <ClipboardList className="h-8 w-8 text-primary" />
           <h1 className="text-3xl font-bold tracking-tight">Task Manager</h1>
         </div>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={fetchTasks}
-          disabled={loading}
-          className="transition-all duration-300"
-        >
-          {loading ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Refreshing...
-            </>
-          ) : (
-            <>
-              <RefreshCw className="mr-2 h-4 w-4" />
-              Refresh Tasks
-            </>
-          )}
-        </Button>
+        <div className="flex items-center gap-3">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={fetchTasks}
+            disabled={loading}
+            className="transition-all duration-300"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Refreshing...
+              </>
+            ) : (
+              <>
+                <RefreshCw className="mr-2 h-4 w-4" />
+                Refresh Tasks
+              </>
+            )}
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-destructive hover:text-destructive/90 hover:bg-destructive/10"
+            onClick={() => {
+              console.log("Logging out...")
+              localStorage.removeItem('token')
+              navigate('/login') 
+            }}
+          >
+            <LogOut className="mr-2 h-4 w-4" />
+            Logout
+          </Button>
+        </div>
       </div>
 
       <Card className="mb-8 border-2 border-primary/10 shadow-sm">

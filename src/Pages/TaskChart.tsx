@@ -18,7 +18,7 @@ import {
   Area,
   AreaChart,
 } from "recharts"
-import { Link } from "react-router"
+import { Link, useNavigate } from "react-router"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Button } from "@/components/ui/button"
@@ -33,12 +33,14 @@ import {
   RefreshCw,
   TrendingUp,
   Calendar,
+  LogOut,
 } from "lucide-react"
 import { Legend } from "recharts"
 
 const TaskChart: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([])
   const [loading, setLoading] = useState(true)
+  const navigate = useNavigate() // Initialize useNavigate
 
   useEffect(() => {
     fetchTasks()
@@ -122,7 +124,7 @@ const TaskChart: React.FC = () => {
     if (active && payload && payload.length) {
       return (
         <div className="bg-background border border-border p-3 rounded-md shadow-md">
-          <p className="font-medium">{legend}</p>
+          <p className="font-medium">{`${legend}`}</p>
           {payload.map((entry: any, index: number) => (
             <p key={index} style={{ color: entry.color || entry.fill }}>
               {`${entry.name}: ${entry.value}`}
@@ -167,6 +169,18 @@ const TaskChart: React.FC = () => {
               Back to Tasks
             </Button>
           </Link>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-destructive hover:text-destructive/90 hover:bg-destructive/10"
+            onClick={() => {
+              console.log("Logging out...")
+              localStorage.removeItem('token')
+              navigate('/login') 
+            }}
+          >
+            <LogOut className="h-4 w-4" />
+          </Button>
         </div>
       </div>
 
