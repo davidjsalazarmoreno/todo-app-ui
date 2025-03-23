@@ -1,40 +1,41 @@
-import { Task, TaskStatus } from "../Models/Task";
+import axios from "axios";
+import { Task } from "../Models/Task";
 
-let tasks: Task[] = [
-  {
-    id: "1",
-    title: "Sample Task 1",
-    description: "This is a sample task",
-    status: TaskStatus.Pending,
-    created_at: new Date().toISOString(),
-    user_id: "user1",
-  },
-  // ...more mock tasks...
-];
+const API_BASE_URL =
+  `${import.meta.env.VITE_REACT_APP_API_PREFIX}/api/v1/tasks`;
+
+const getAuthToken = () => localStorage.getItem("token");
 
 export const getTasks = async (): Promise<Task[]> => {
-  return tasks;
+  const token = getAuthToken();
+  const response = await axios.get(API_BASE_URL, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
 };
 
-export const addTask = async (task: Omit<Task, "id" | "created_at">): Promise<Task> => {
-  const newTask: Task = {
-    ...task,
-    id: String(tasks.length + 1),
-    created_at: new Date().toISOString(),
-  };
-  tasks.push(newTask);
-  return newTask;
+export const addTask = async (task: Partial<Task>): Promise<Task> => {
+  const token = getAuthToken();
+  const response = await axios.post(API_BASE_URL, task, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
 };
 
-export const updateTask = async (id: string, updates: Partial<Task>): Promise<Task | null> => {
-  const taskIndex = tasks.findIndex((task) => task.id === id);
-  if (taskIndex === -1) return null;
-  tasks[taskIndex] = { ...tasks[taskIndex], ...updates, updated_at: new Date().toISOString() };
-  return tasks[taskIndex];
+export const updateTask = async (
+  taskId: string,
+  updates: Partial<Task>,
+): Promise<Task> => {
+  const token = getAuthToken();
+  const response = await axios.put(`${API_BASE_URL}/${taskId}`, updates, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return response.data;
 };
 
-export const deleteTask = async (id: string): Promise<boolean> => {
-  const initialLength = tasks.length;
-  tasks = tasks.filter((task) => task.id !== id);
-  return tasks.length < initialLength;
+export const deleteTask = async (taskId: string): Promise<void> => {
+  const token = getAuthToken();
+  await axios.delete(`${API_BASE_URL}/${taskId}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
 };
