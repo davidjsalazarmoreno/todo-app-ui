@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getTasks } from "../Services/taskService";
-import { Task } from "../Models/Task";
+import { Task, TaskStatus } from "../Models/Task";
 import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
 
 const TaskChart: React.FC = () => {
@@ -16,9 +16,9 @@ const TaskChart: React.FC = () => {
   };
 
   const data = [
-    { name: "Pending", value: tasks.filter((task) => task.status === "pending").length },
-    { name: "In Progress", value: tasks.filter((task) => task.status === "in-progress").length },
-    { name: "Completed", value: tasks.filter((task) => task.status === "completed").length },
+    { name: "Pending", value: tasks.filter((task) => task.status === TaskStatus.Pending).length },
+    { name: "In Progress", value: tasks.filter((task) => task.status === TaskStatus.InProgress).length },
+    { name: "Completed", value: tasks.filter((task) => task.status === TaskStatus.Completed).length },
   ];
 
   const COLORS = ["#FFBB28", "#FF8042", "#0088FE"];

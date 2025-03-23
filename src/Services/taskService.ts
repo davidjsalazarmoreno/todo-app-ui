@@ -1,11 +1,11 @@
-import { Task } from "../Models/Task";
+import { Task, TaskStatus } from "../Models/Task";
 
 let tasks: Task[] = [
   {
     id: "1",
     title: "Sample Task 1",
     description: "This is a sample task",
-    status: "pending",
+    status: TaskStatus.Pending,
     created_at: new Date().toISOString(),
     user_id: "user1",
   },

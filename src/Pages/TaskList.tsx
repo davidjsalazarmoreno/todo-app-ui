@@ -5,7 +5,7 @@ import {
   updateTask,
   deleteTask,
 } from '../Services/taskService'
-import { Task } from '../Models/Task'
+import { Task, TaskStatus } from '../Models/Task'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -19,10 +19,10 @@ import { Card, CardHeader, CardContent } from '@/components/ui/card'
 
 const TaskList: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([])
-  const [newTask, setNewTask] = useState({
+  const [newTask, setNewTask] = useState<Partial<Task>>({
     title: '',
     description: '',
-    status: 'pending',
+    status: TaskStatus.Pending,
   })
 
   useEffect(() => {
@@ -37,11 +37,11 @@ const TaskList: React.FC = () => {
   const handleAddTask = async () => {
     if (!newTask.title) return
     await addTask({ ...newTask, user_id: 'user1' })
-    setNewTask({ title: '', description: '', status: 'pending' })
+    setNewTask({ title: '', description: '', status: TaskStatus.Pending })
     fetchTasks()
   }
 
-  const handleUpdateTask = async (id: string, status: string) => {
+  const handleUpdateTask = async (id: string, status: TaskStatus) => {
     await updateTask(id, { status })
     fetchTasks()
   }
@@ -69,15 +69,17 @@ const TaskList: React.FC = () => {
         />
         <Select
           value={newTask.status}
-          onValueChange={(value) => setNewTask({ ...newTask, status: value })}
+          onValueChange={(value) =>
+            setNewTask({ ...newTask, status: value as TaskStatus })
+          }
         >
           <SelectTrigger>
             <SelectValue placeholder="Select status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="pending">Pending</SelectItem>
-            <SelectItem value="in-progress">In Progress</SelectItem>
-            <SelectItem value="completed">Completed</SelectItem>
+            <SelectItem value={TaskStatus.Pending}>Pending</SelectItem>
+            <SelectItem value={TaskStatus.InProgress}>In Progress</SelectItem>
+            <SelectItem value={TaskStatus.Completed}>Completed</SelectItem>
           </SelectContent>
         </Select>
         <Button onClick={handleAddTask}>Add Task</Button>
@@ -93,11 +95,13 @@ const TaskList: React.FC = () => {
               <p>Status: {task.status}</p>
               <div className="flex gap-2 mt-2">
                 <Button
-                  onClick={() => handleUpdateTask(task.id, 'in-progress')}
+                  onClick={() => handleUpdateTask(task.id, TaskStatus.InProgress)}
                 >
                   In Progress
                 </Button>
-                <Button onClick={() => handleUpdateTask(task.id, 'completed')}>
+                <Button
+                  onClick={() => handleUpdateTask(task.id, TaskStatus.Completed)}
+                >
                   Complete
                 </Button>
                 <Button
