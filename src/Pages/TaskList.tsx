@@ -178,8 +178,9 @@ const TaskList: React.FC = () => {
             size="sm"
             className="text-destructive hover:text-destructive/90 hover:bg-destructive/10"
             onClick={handleLogout}
+            data-testid="log-out"
           >
-            <LogOut className="mr-2 h-4 w-4" data-testid="log-out" />
+            <LogOut className="mr-2 h-4 w-4" />
             Logout
           </Button>
         </div>
@@ -275,7 +276,7 @@ const TaskList: React.FC = () => {
           {tasks.map((task) => (
             <Card
               key={task.id}
-              className="overflow-hidden transition-all duration-300 hover:shadow-md"
+              className="overflow-hidden transition-all duration-300 hover:shadow-md task"
             >
               <CardHeader className="pb-2">
                 <div className="flex justify-between items-start">
@@ -333,12 +334,13 @@ const TaskList: React.FC = () => {
                   onClick={() => handleDeleteTask(task.id)}
                   disabled={actionLoading === task.id}
                   className="flex-1"
+                  data-testid="trash-2"
                 >
                   {actionLoading === task.id ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
                   ) : (
                     <>
-                      <Trash2 className="h-4 w-4" data-testid="trash-2" />
+                      <Trash2 className="h-4 w-4" />
                     </>
                   )}
                 </Button>
