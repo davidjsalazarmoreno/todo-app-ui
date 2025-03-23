@@ -36,6 +36,7 @@ import {
   LogOut,
 } from "lucide-react"
 import { Legend } from "recharts"
+import { logout } from "../Services/authService"
 
 const TaskChart: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([])
@@ -136,6 +137,19 @@ const TaskChart: React.FC = () => {
     return null
   }
 
+  const handleLogout = async () => {
+    try {
+      const token = localStorage.getItem('token')
+      if (token) {
+        await logout(token)
+        localStorage.removeItem('token')
+        navigate('/')
+      }
+    } catch (error) {
+      console.error("Logout failed", error)
+    }
+  }
+
   return (
     <div className="container mx-auto px-4 py-8 max-w-6xl">
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-8">
@@ -173,11 +187,7 @@ const TaskChart: React.FC = () => {
             variant="ghost"
             size="sm"
             className="text-destructive hover:text-destructive/90 hover:bg-destructive/10"
-            onClick={() => {
-              console.log("Logging out...")
-              localStorage.removeItem('token')
-              navigate('/') 
-            }}
+            onClick={handleLogout}
           >
             <LogOut className="h-4 w-4" />
           </Button>

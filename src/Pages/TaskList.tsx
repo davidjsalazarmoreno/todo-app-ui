@@ -1,24 +1,52 @@
-"use client"
+'use client'
 
-import type React from "react"
-import { useEffect, useState } from "react"
-import { getTasks, addTask, updateTask, deleteTask } from "../Services/taskService"
-import { type Task, TaskStatus } from "../Models/Task"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
-import { CheckCircle2, Clock, Loader2, Plus, RefreshCw, Trash2, ClipboardList, ArrowRight, LogOut } from "lucide-react"
-import { Link, useNavigate } from "react-router"
+import type React from 'react'
+import { useEffect, useState } from 'react'
+import {
+  getTasks,
+  addTask,
+  updateTask,
+  deleteTask,
+} from '../Services/taskService'
+import { type Task, TaskStatus } from '../Models/Task'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Separator } from '@/components/ui/separator'
+import {
+  CheckCircle2,
+  Clock,
+  Loader2,
+  Plus,
+  RefreshCw,
+  Trash2,
+  ClipboardList,
+  ArrowRight,
+  LogOut,
+} from 'lucide-react'
+import { Link, useNavigate } from 'react-router'
+import { logout } from '@/Services/authService'
 
 const TaskList: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([])
   const [newTask, setNewTask] = useState<Partial<Task>>({
-    title: "",
-    description: "",
+    title: '',
+    description: '',
     status: TaskStatus.Pending,
   })
   const [loading, setLoading] = useState(false)
@@ -41,10 +69,10 @@ const TaskList: React.FC = () => {
 
   const handleAddTask = async () => {
     if (!newTask.title) return
-    setActionLoading("add")
+    setActionLoading('add')
     try {
-      await addTask({ ...newTask, user_id: "user1" })
-      setNewTask({ title: "", description: "", status: TaskStatus.Pending })
+      await addTask({ ...newTask, user_id: 'user1' })
+      setNewTask({ title: '', description: '', status: TaskStatus.Pending })
       fetchTasks()
     } finally {
       setActionLoading(null)
@@ -75,24 +103,46 @@ const TaskList: React.FC = () => {
     switch (status) {
       case TaskStatus.Pending:
         return (
-          <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
+          <Badge
+            variant="outline"
+            className="bg-yellow-50 text-yellow-700 border-yellow-200"
+          >
             <Clock className="mr-1 h-3 w-3" /> Pending
           </Badge>
         )
       case TaskStatus.InProgress:
         return (
-          <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+          <Badge
+            variant="outline"
+            className="bg-blue-50 text-blue-700 border-blue-200"
+          >
             <RefreshCw className="mr-1 h-3 w-3 animate-spin-slow" /> In Progress
           </Badge>
         )
       case TaskStatus.Completed:
         return (
-          <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+          <Badge
+            variant="outline"
+            className="bg-green-50 text-green-700 border-green-200"
+          >
             <CheckCircle2 className="mr-1 h-3 w-3" /> Completed
           </Badge>
         )
       default:
         return null
+    }
+  }
+
+  const handleLogout = async () => {
+    try {
+      const token = localStorage.getItem('token')
+      if (token) {
+        await logout(token)
+        localStorage.removeItem('token')
+        navigate('/')
+      }
+    } catch (error) {
+      console.error('Logout failed', error)
     }
   }
 
@@ -127,11 +177,7 @@ const TaskList: React.FC = () => {
             variant="ghost"
             size="sm"
             className="text-destructive hover:text-destructive/90 hover:bg-destructive/10"
-            onClick={() => {
-              console.log("Logging out...")
-              localStorage.removeItem('token')
-              navigate('/') 
-            }}
+            onClick={handleLogout}
           >
             <LogOut className="mr-2 h-4 w-4" />
             Logout
@@ -149,37 +195,47 @@ const TaskList: React.FC = () => {
               <Input
                 placeholder="Task title"
                 value={newTask.title}
-                onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
+                onChange={(e) =>
+                  setNewTask({ ...newTask, title: e.target.value })
+                }
                 className="mb-2"
               />
               <Textarea
                 placeholder="Task description"
-                value={newTask.description || ""}
-                onChange={(e) => setNewTask({ ...newTask, description: e.target.value })}
+                value={newTask.description || ''}
+                onChange={(e) =>
+                  setNewTask({ ...newTask, description: e.target.value })
+                }
                 className="min-h-[100px]"
               />
             </div>
             <div className="flex flex-col justify-between">
               <Select
                 value={newTask.status}
-                onValueChange={(value) => setNewTask({ ...newTask, status: value as TaskStatus })}
+                onValueChange={(value) =>
+                  setNewTask({ ...newTask, status: value as TaskStatus })
+                }
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select status" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value={TaskStatus.Pending}>Pending</SelectItem>
-                  <SelectItem value={TaskStatus.InProgress}>In Progress</SelectItem>
-                  <SelectItem value={TaskStatus.Completed}>Completed</SelectItem>
+                  <SelectItem value={TaskStatus.InProgress}>
+                    In Progress
+                  </SelectItem>
+                  <SelectItem value={TaskStatus.Completed}>
+                    Completed
+                  </SelectItem>
                 </SelectContent>
               </Select>
               <Button
                 onClick={handleAddTask}
-                disabled={actionLoading === "add" || !newTask.title}
+                disabled={actionLoading === 'add' || !newTask.title}
                 className="mt-4 md:self-end transition-all duration-300"
                 size="lg"
               >
-                {actionLoading === "add" ? (
+                {actionLoading === 'add' ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Adding...
@@ -207,22 +263,31 @@ const TaskList: React.FC = () => {
       ) : tasks.length === 0 ? (
         <div className="text-center py-12 bg-muted/50 rounded-lg">
           <ClipboardList className="h-12 w-12 mx-auto text-muted-foreground mb-2" />
-          <h3 className="text-xl font-medium text-muted-foreground">No tasks yet</h3>
-          <p className="text-muted-foreground">Create your first task to get started</p>
+          <h3 className="text-xl font-medium text-muted-foreground">
+            No tasks yet
+          </h3>
+          <p className="text-muted-foreground">
+            Create your first task to get started
+          </p>
         </div>
       ) : (
         <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           {tasks.map((task) => (
-            <Card key={task.id} className="overflow-hidden transition-all duration-300 hover:shadow-md">
+            <Card
+              key={task.id}
+              className="overflow-hidden transition-all duration-300 hover:shadow-md"
+            >
               <CardHeader className="pb-2">
                 <div className="flex justify-between items-start">
-                  <CardTitle className="text-xl line-clamp-1">{task.title}</CardTitle>
+                  <CardTitle className="text-xl line-clamp-1">
+                    {task.title}
+                  </CardTitle>
                   {getStatusBadge(task.status)}
                 </div>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground line-clamp-3 min-h-[4.5rem]">
-                  {task.description || "No description provided"}
+                  {task.description || 'No description provided'}
                 </p>
               </CardContent>
               <CardFooter className="flex flex-wrap gap-2 bg-muted/10 pt-4">
@@ -230,11 +295,17 @@ const TaskList: React.FC = () => {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => handleUpdateTask(task.id, TaskStatus.InProgress)}
+                    onClick={() =>
+                      handleUpdateTask(task.id, TaskStatus.InProgress)
+                    }
                     disabled={actionLoading === task.id}
                     className="flex-1"
                   >
-                    {actionLoading === task.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <>Start</>}
+                    {actionLoading === task.id ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <>Start</>
+                    )}
                   </Button>
                 )}
 
@@ -242,11 +313,17 @@ const TaskList: React.FC = () => {
                   <Button
                     variant="default"
                     size="sm"
-                    onClick={() => handleUpdateTask(task.id, TaskStatus.Completed)}
+                    onClick={() =>
+                      handleUpdateTask(task.id, TaskStatus.Completed)
+                    }
                     disabled={actionLoading === task.id}
                     className="flex-1"
                   >
-                    {actionLoading === task.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <>Complete</>}
+                    {actionLoading === task.id ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <>Complete</>
+                    )}
                   </Button>
                 )}
 
@@ -272,7 +349,10 @@ const TaskList: React.FC = () => {
       )}
 
       <div className="mt-8 text-center">
-        <Link to="/chart" className="inline-flex items-center text-primary hover:text-primary/80 transition-colors">
+        <Link
+          to="/chart"
+          className="inline-flex items-center text-primary hover:text-primary/80 transition-colors"
+        >
           View Task Analytics
           <ArrowRight className="ml-2 h-4 w-4" />
         </Link>
@@ -282,4 +362,3 @@ const TaskList: React.FC = () => {
 }
 
 export default TaskList
-
