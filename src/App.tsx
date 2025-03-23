@@ -1,15 +1,15 @@
-import "./App.css";
-import { Button } from "./components/ui/button";
+import React from 'react'
+import { Routes, Route } from 'react-router'
+import TaskList from './Pages/TaskList'
+import TaskChart from './Pages/TaskChart'
 
-function App() {
+const App: React.FC = () => {
   return (
-    <>
-      <div className="flex flex-col items-center justify-center min-h-svh">
-        Hello
-        <Button variant="default">Click me</Button>
-      </div>
-    </>
-  );
+    <Routes>
+      <Route path="/" element={<TaskList />} />
+      <Route path="/chart" element={<TaskChart />} />
+    </Routes>
+  )
 }
 
-export default App;
+export default App
