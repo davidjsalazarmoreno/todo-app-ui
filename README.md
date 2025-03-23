@@ -7,13 +7,6 @@
 
 ## Installation
 
-1. Clone the repository:
-```bash
-git clone https://github.com/yourusername/todo-app-ui.git
-cd todo-app-ui
-```
-
-2. Install dependencies:
 ```bash
 nvm install && nvm use
 npm install
