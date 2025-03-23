@@ -176,7 +176,7 @@ const TaskChart: React.FC = () => {
             onClick={() => {
               console.log("Logging out...")
               localStorage.removeItem('token')
-              navigate('/login') 
+              navigate('/') 
             }}
           >
             <LogOut className="h-4 w-4" />

@@ -130,7 +130,7 @@ const TaskList: React.FC = () => {
             onClick={() => {
               console.log("Logging out...")
               localStorage.removeItem('token')
-              navigate('/login') 
+              navigate('/') 
             }}
           >
             <LogOut className="mr-2 h-4 w-4" />
