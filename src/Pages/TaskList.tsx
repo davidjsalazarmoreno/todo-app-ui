@@ -40,7 +40,7 @@ import {
   LogOut,
 } from 'lucide-react'
 import { Link, useNavigate } from 'react-router'
-import { logout } from '@/Services/authService'
+import { useAuth } from '../contexts/AuthContext'
 
 const TaskList: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([])
@@ -52,6 +52,7 @@ const TaskList: React.FC = () => {
   const [loading, setLoading] = useState(false)
   const [actionLoading, setActionLoading] = useState<string | null>(null)
   const navigate = useNavigate() // Initialize useNavigate
+  const { logout } = useAuth()
 
   useEffect(() => {
     fetchTasks()
@@ -133,17 +134,8 @@ const TaskList: React.FC = () => {
     }
   }
 
-  const handleLogout = async () => {
-    try {
-      const token = localStorage.getItem('token')
-      if (token) {
-        await logout(token)
-        localStorage.removeItem('token')
-        navigate('/')
-      }
-    } catch (error) {
-      console.error('Logout failed', error)
-    }
+  const handleLogout = () => {
+    logout()
   }
 
   return (

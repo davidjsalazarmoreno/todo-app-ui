@@ -36,12 +36,13 @@ import {
   LogOut,
 } from "lucide-react"
 import { Legend } from "recharts"
-import { logout } from "../Services/authService"
+import { useAuth } from '../contexts/AuthContext'
 
 const TaskChart: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([])
   const [loading, setLoading] = useState(true)
   const navigate = useNavigate() // Initialize useNavigate
+  const { logout } = useAuth()
 
   useEffect(() => {
     fetchTasks()
@@ -137,17 +138,8 @@ const TaskChart: React.FC = () => {
     return null
   }
 
-  const handleLogout = async () => {
-    try {
-      const token = localStorage.getItem('token')
-      if (token) {
-        await logout(token)
-        localStorage.removeItem('token')
-        navigate('/')
-      }
-    } catch (error) {
-      console.error("Logout failed", error)
-    }
+  const handleLogout = () => {
+    logout()
   }
 
   return (

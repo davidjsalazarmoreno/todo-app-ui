@@ -1,24 +1,18 @@
 import React, { useState } from 'react'
-
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { login } from '../Services/authService'
-import { useNavigate } from 'react-router'
+import { useAuth } from '../contexts/AuthContext'
 
 const Login: React.FC = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
-  const navigate = useNavigate() // Initialize useNavigate
+  const { login } = useAuth()
 
   const handleLogin = async () => {
     setError(null)
     try {
-      const data = await login(username, password)
-      console.log('Login successful:', data)
-      console.log('Token:', data.token)
-      localStorage.setItem('token', data.token)
-      navigate('/tasks') // Redirect to tasks page
+      await login(username, password)
     } catch (e) {
       console.log(e)
       setError('Invalid username or password')

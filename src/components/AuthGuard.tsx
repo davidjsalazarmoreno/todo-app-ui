@@ -1,16 +1,14 @@
-import React from 'react'
-import { Navigate } from 'react-router'
+import React from 'react';
+import { Navigate } from 'react-router';
+import { useAuth } from '../contexts/AuthContext';
 
 interface AuthGuardProps {
-  children: React.ReactNode
-}
-
-const isAuthenticated = () => {
-  return !!localStorage.getItem('token') // Example check for authentication
+  children: React.ReactNode;
 }
 
 const AuthGuard: React.FC<AuthGuardProps> = ({ children }) => {
-  return isAuthenticated() ? <>{children}</> : <Navigate to="/" />
-}
+  const { isAuthenticated } = useAuth();
+  return isAuthenticated ? <>{children}</> : <Navigate to="/" />;
+};
 
-export default AuthGuard
+export default AuthGuard;
