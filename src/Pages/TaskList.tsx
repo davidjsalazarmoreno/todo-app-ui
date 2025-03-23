@@ -179,7 +179,7 @@ const TaskList: React.FC = () => {
             className="text-destructive hover:text-destructive/90 hover:bg-destructive/10"
             onClick={handleLogout}
           >
-            <LogOut className="mr-2 h-4 w-4" />
+            <LogOut className="mr-2 h-4 w-4" data-testid="log-out" />
             Logout
           </Button>
         </div>
@@ -338,7 +338,7 @@ const TaskList: React.FC = () => {
                     <Loader2 className="h-4 w-4 animate-spin" />
                   ) : (
                     <>
-                      <Trash2 className="h-4 w-4" />
+                      <Trash2 className="h-4 w-4" data-testid="trash-2" />
                     </>
                   )}
                 </Button>
